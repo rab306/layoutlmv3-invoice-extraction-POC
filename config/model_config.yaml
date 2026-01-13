@@ -1,0 +1,111 @@
+# Model configuration for LayoutLMv3 training
+
+model:
+  # Model architecture
+  model_name: "microsoft/layoutlmv3-base"
+  num_labels: 16  # From label2id mapping
+  id2label:  # Reverse mapping from Phase 5
+    0: "O"
+    1: "B-invoice_number"
+    2: "I-invoice_number"
+    3: "B-invoice_date"
+    4: "I-invoice_date"
+    5: "B-buyer_address"
+    6: "I-buyer_address"
+    7: "B-seller_address"
+    8: "I-seller_address"
+    9: "B-product_description"
+    10: "I-product_description"
+    11: "B-product_quantity"
+    12: "B-product_unit_price"
+    13: "B-product_total_price"
+    14: "B-payment_total"
+    15: "B-payment_sub_total"
+
+# Training hyperparameters
+training:
+  # Basic training
+  num_train_epochs: 10
+  per_device_train_batch_size: 8
+  per_device_eval_batch_size: 8
+  gradient_accumulation_steps: 2
+  warmup_steps: 500
+  
+  # Optimization
+  learning_rate: 5e-5
+  weight_decay: 0.01
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  adam_epsilon: 1e-8
+  
+  # Scheduler
+  lr_scheduler_type: "linear"
+  warmup_ratio: 0.1
+  
+  # Checkpointing
+  save_strategy: "epoch"
+  evaluation_strategy: "epoch"
+  save_total_limit: 3
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_loss"
+  
+  # Early stopping
+  early_stopping_patience: 3
+  early_stopping_threshold: 0.001
+
+# Kaggle-specific settings
+kaggle:
+  # Resource constraints
+  tpu: false
+  gpu: true
+  fp16: true
+  gradient_checkpointing: true
+  
+  # Time limits
+  max_training_hours: 2
+  save_checkpoints_to_output: true
+  
+  # Competition settings
+  competition_name: "invoice-layout-analysis"
+  output_dir: "/kaggle/working"
+  dataset_dir: "/kaggle/input/layoutlm-dataset"
+
+# Evaluation metrics
+evaluation:
+  metrics:
+    - "precision"
+    - "recall"
+    - "f1"
+    - "accuracy"
+  
+  # Seqeval for NER
+  seqeval:
+    scheme: "BIO"
+    mode: "strict"
+    average: "weighted"
+  
+  # Class-specific focus
+  important_labels:
+    - "invoice_number"
+    - "invoice_date"
+    - "payment_total"
+  
+  # Thresholds
+  f1_threshold: 0.7
+  precision_threshold: 0.75
+  recall_threshold: 0.65
+
+# Logging and monitoring
+logging:
+  level: "INFO"
+  report_to: "wandb"  # "wandb", "tensorboard", or "none"
+  logging_steps: 50
+  save_steps: 500
+  eval_steps: 500
+  
+  # Weights & Biases (if used)
+  wandb:
+    project: "invoice-ocr-layoutlm"
+    entity: null  # Your wandb username
+    tags: ["layoutlmv3", "invoice", "ner"]
+    notes: "Invoice document layout analysis with LayoutLMv3"

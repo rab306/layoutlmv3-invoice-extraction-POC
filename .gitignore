@@ -1,0 +1,77 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+
+# OS
+.DS_Store
+Thumbs.db
+
+
+# Data directories (LARGE FILES)
+/data/
+ocr-venv/
+layoutlm_dataset.zip
+
+
+# HuggingFace datasets
+layoutlm_dataset/
+
+
+# Model checkpoints
+results/checkpoints/
+*.pth
+*.bin
+*.safetensors
+*.ckpt
+layoutlm_invoice_model*/
+
+
+*.json
+*.arrow
+
+*.png
+*.jpg
+*.jpeg
+!results/figures/
+
+
+logs/
+logs_*/
+*.log
+wandb/
+
+
+tmp/
+temp/
+*.tmp
+
+
+documentation.txt
+kaggle.json
+
+
+*.h5
+*.hdf5
+*.pkl
+*.pickle

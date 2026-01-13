@@ -1,0 +1,83 @@
+# Data configuration for invoice OCR project
+
+paths:
+  # Raw data paths
+  raw:
+    base_dir: "data/raw"
+    images: "data/raw/images"
+    annotations: "data/raw/annotations"
+  
+  # Processed data paths
+  processed:
+    base_dir: "data/processed"
+    cleaned_data: "data/processed/cleaned_data.json"
+    ocr_results: "data/processed/ocr_results.json"
+    labeled_dataset: "data/processed/labeled_dataset.json"
+  
+  # Dataset output
+  datasets:
+    layoutlm_dataset: "layoutlm_dataset"
+    kaggle_dataset: "layoutlm_dataset.zip"
+
+# Data processing parameters
+preprocessing:
+  target_fields:
+    - filename
+    - invoice_number
+    - invoice_date
+    - buyer_address
+    - products
+    - seller_address
+    - payment_total
+    - payment_sub_total
+  
+  validation:
+    tier1_fields:  # Should have 0 nulls
+      - invoice_number
+      - invoice_date
+      - buyer_address
+      - products
+    
+    tier2_fields:  # Should have ~1000 nulls
+      - seller_address
+      - payment_total
+      - payment_sub_total
+    
+    expected_null_ranges:
+      tier2_min: 800
+      tier2_max: 1200
+
+# OCR parameters
+ocr:
+  tesseract_config: "--psm 6 --oem 3"
+  check_alignment_count: 10
+  checkpoint_interval: 100
+
+# Label alignment parameters
+label_alignment:
+  fuzzy_threshold: 70
+  numeric_threshold: 55
+  max_sequence_distance: 30
+  spatial_max_distance: 130
+
+# Dataset creation parameters
+dataset:
+  processor: "microsoft/layoutlmv3-base"
+  max_length: 512
+  image_size: 224
+  
+  split:
+    train_ratio: 0.8
+    val_ratio: 0.1
+    test_ratio: 0.1
+    random_state: 42
+  
+  memory_safety:
+    train_chunk_size: 300
+    val_chunk_size: 200
+    test_chunk_size: 200
+  
+  # Kaggle-specific settings
+  kaggle:
+    max_files_per_zip: 1000
+    compression: "zip"
