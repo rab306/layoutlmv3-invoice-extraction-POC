@@ -50,26 +50,17 @@ layoutlm_invoice_model*/
 *.json
 *.arrow
 
-*.png
-*.jpg
-*.jpeg
-!results/figures/
-
-
 logs/
 logs_*/
 *.log
 wandb/
 
-
 tmp/
 temp/
 *.tmp
 
-
 documentation.txt
 kaggle.json
-
 
 *.h5
 *.hdf5
